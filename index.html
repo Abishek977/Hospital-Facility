@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Map - Survey Group E</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header Section -->
+   <div id="header">
+    <div id="logo">
+        <img src="Image/Logo.png" alt="Logo" />
+    </div>
+    <div id="page-title">Healthcare Facilities Map</div>
+</div>
+   <!-- Search Section -->
+<div id="search-container">
+    <input type="text" id="search-input" placeholder="Search by name or code..." />
+    <button id="search-button">Search</button>
+</div>
+    <!-- Main Content Container -->
+    <div class="container">
+        <!-- Map Container -->
+        <div id="map"></div>
+    </div>
+
+    <!-- Footer Section -->
+    <div id="footer">© Copyright Survey Group E</div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Main JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
