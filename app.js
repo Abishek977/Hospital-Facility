@@ -1,23 +1,55 @@
-// Map Initialization
+// --- Map Initialization --- 
 const map = L.map('map', {
-    center: [28.2096, 83.9856], // Centered around Pokhara 17 (Biruwa)
-    zoom: 13,                    // Default zoom level for the area
-    maxZoom: 17,                 // Maximum zoom level (allows zooming in)
-    minZoom: 13,                 // Minimum zoom level (prevents zooming out below this level)
+    center: [28.19096, 83.9756],
+    zoom: 14,
+    maxZoom: 17,
+    minZoom: 13.5,
     maxBounds: [
-        [28.16, 83.94],          // Southwest Corner of Pokhara 17 + surroundings
-        [28.26, 84.03]           // Northeast Corner of Pokhara 17 + surroundings
+        [28.15, 83.93],
+        [28.26, 84.03]
     ],
-    maxBoundsViscosity: 1.0,     // Prevents the map from panning outside of the maxBounds
-    scrollWheelZoom: true        // Optional: Allows zooming using the scroll wheel
+    maxBoundsViscosity: 1.0,
+    scrollWheelZoom: true
 });
 
-// Base Map Layer - OpenStreetMap
-const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// --- Base Layer ---
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; OpenStreetMap contributors'
-});
-osmLayer.addTo(map);
+}).addTo(map);
 
+const iconSizes = {
+    Hospital: [50, 40],   // Hospital icon size [width, height]
+    Clinic: [20, 20],     // Clinic icon size
+    Pharmacy: [20, 20]    // Pharmacy icon size
+};
+// --- Custom Icons ---
+const facilityIcons = {
+    Hospital: L.icon({
+        iconUrl: 'Hospital.png',
+        iconSize: iconSizes.Hospital,
+        iconAnchor: [iconSizes.Hospital[0] / 2, iconSizes.Hospital[1]], // center bottom
+        popupAnchor: [0, -iconSizes.Hospital[1] / 1.2]
+    }),
+    Clinic: L.icon({
+        iconUrl: 'Clinic.jpg',
+        iconSize: iconSizes.Clinic,
+        iconAnchor: [iconSizes.Clinic[0] / 2, iconSizes.Clinic[1]],
+        popupAnchor: [0, -iconSizes.Clinic[1] / 1.2]
+    }),
+    Pharmacy: L.icon({
+        iconUrl: 'Pharmacy.jpg',
+        iconSize: iconSizes.Pharmacy,
+        iconAnchor: [iconSizes.Pharmacy[0] / 2, iconSizes.Pharmacy[1]],
+        popupAnchor: [0, -iconSizes.Pharmacy[1] / 1.2]
+    })
+};
+
+// --- Layer Groups ---
+let facilityLayers = {
+    hospital: L.layerGroup().addTo(map),
+    clinic: L.layerGroup().addTo(map),
+    pharmacy: L.layerGroup().addTo(map)
+};
 // Sample GeoJSON Data (Replace with your JSON file path)
 const geoData = [
     {
@@ -234,7 +266,7 @@ const geoData = [
         "type": "FeatureCollection",
         "name": "GPS_SURVEY_GROUP_E",
         "features": [
-            { "type": "Feature", "geometry": { "type": "Point", "coordinates": [83.9770108, 28.1915703, 756.0] }, "properties": { "start": "2024-11-25T14:52:10.557+05:45", "end": "2024-11-26T20:32:55.474+05:45", "Form Number": "31", "Healthcare Facility Name": "Nepal Netrajyoti Sangha, Himalaya Eye Hospital", "Address": "Gharipatan", "Contact No.": "061-451168", "Ownership": "Others", "Opening Hour": "08:45:00.000+05:45", "Closing hour": "14:00:00.000+05:45", "Type of Healthcare Facility": "Hospital Pharmacy", "Type of Treatment": "Medicine only Tertiary", "Emergency Services": "Yes", "Wheelchair availability": "Yes", "If yes, how many?": "10", "No. of Beds": "51", "No. of Staff": "110", "Staff Education": "Bachelor and masters", "Full Capacity (approx)": "800", "Daily average traffic": "650", "Photo": "1732526169570.jpg", "Photo_URL": "https://kc.kobotoolbox.org/media/original?media_file=lijamagar%2Fattachments%2F7dca5c2315044268a0872a600b5dd82d%2F7f7e110b-b314-4135-b82e-341698d432d8%2F1732526169570.jpg", "_id": 413179776, "_uuid": "6acbcd92-338c-4556-83b1-cc1ede62d5e8", "_submission_time": "2024-11-26T14:24:01", "_status": "submitted_via_web", "_submitted_by": "lijamagar", "__version__": "vtKh2Uf6azKxxB8Qy8d8tb", "_index": 31 } }
+            { "type": "Feature", "geometry": { "type": "Point", "coordinates": [83.9770108, 28.1915703, 756.0] }, "properties": { "start": "2024-11-25T14:52:10.557+05:45", "end": "2024-11-26T20:32:55.474+05:45", "Form Number": "31", "Healthcare Facility Name": "Nepal Netrajyoti Sangha, Himalaya Eye Hospital", "Address": "Gharipatan", "Contact No.": "061-451168", "Ownership": "Others", "Opening Hour": "08:45:00.000+05:45", "Closing hour": "14:00:00.000+05:45", "Type of Healthcare Facility": "Hospital", "Type of Treatment": "Medicine only Tertiary", "Emergency Services": "Yes", "Wheelchair availability": "Yes", "If yes, how many?": "10", "No. of Beds": "51", "No. of Staff": "110", "Staff Education": "Bachelor and masters", "Full Capacity (approx)": "800", "Daily average traffic": "650", "Photo": "1732526169570.jpg", "Photo_URL": "https://kc.kobotoolbox.org/media/original?media_file=lijamagar%2Fattachments%2F7dca5c2315044268a0872a600b5dd82d%2F7f7e110b-b314-4135-b82e-341698d432d8%2F1732526169570.jpg", "_id": 413179776, "_uuid": "6acbcd92-338c-4556-83b1-cc1ede62d5e8", "_submission_time": "2024-11-26T14:24:01", "_status": "submitted_via_web", "_submitted_by": "lijamagar", "__version__": "vtKh2Uf6azKxxB8Qy8d8tb", "_index": 31 } }
         ]
     },
     {
@@ -304,7 +336,7 @@ const geoData = [
         "type": "FeatureCollection",
         "name": "GPS_SURVEY_GROUP_E",
         "features": [
-            { "type": "Feature", "geometry": { "type": "Point", "coordinates": [83.9821572, 28.183683, 761.0] }, "properties": { "start": "2024-11-26T10:42:59.544+05:45", "end": "2024-11-26T20:40:54.016+05:45", "Form Number": "41", "Healthcare Facility Name": "Urban Health Center", "Address": "Aadarsha Tole", "Contact No.": "9746307017", "Ownership": "Public", "Opening Hour": "10:00:00.000+05:45", "Closing hour": "17:00:00.000+05:45", "Type of Treatment": "Medicine only Primary", "Emergency Services": "Yes", "Wheelchair availability": "Yes", "If yes, how many?": "1", "No. of Beds": "3", "No. of Staff": "3", "Staff Education": "Ahw, anm, bachelor in public health", "Daily average traffic": "45", "Photo": "1732597695175.jpg", "Photo_URL": "https://kc.kobotoolbox.org/media/original?media_file=lijamagar%2Fattachments%2F7dca5c2315044268a0872a600b5dd82d%2F79af4737-b538-4482-b894-b4b4aebf0fc1%2F1732597695175.jpg", "_id": 413180157, "_uuid": "0d4c9e98-3623-457c-8165-d0b16c691577", "_submission_time": "2024-11-26T14:24:53", "_status": "submitted_via_web", "_submitted_by": "lijamagar", "__version__": "vtKh2Uf6azKxxB8Qy8d8tb", "_index": 41 } }
+            { "type": "Feature", "geometry": { "type": "Point", "coordinates": [83.9821572, 28.183683, 761.0] }, "properties": { "start": "2024-11-26T10:42:59.544+05:45", "end": "2024-11-26T20:40:54.016+05:45", "Form Number": "41", "Healthcare Facility Name": "Urban Health Center", "Address": "Aadarsha Tole", "Contact No.": "9746307017", "Ownership": "Public", "Opening Hour": "10:00:00.000+05:45", "Closing hour": "17:00:00.000+05:45","Type of Healthcare Facility": "Clinic", "Type of Treatment": "Medicine only Primary", "Emergency Services": "Yes", "Wheelchair availability": "Yes", "If yes, how many?": "1", "No. of Beds": "3", "No. of Staff": "3", "Staff Education": "Ahw, anm, bachelor in public health", "Daily average traffic": "45", "Photo": "1732597695175.jpg", "Photo_URL": "https://kc.kobotoolbox.org/media/original?media_file=lijamagar%2Fattachments%2F7dca5c2315044268a0872a600b5dd82d%2F79af4737-b538-4482-b894-b4b4aebf0fc1%2F1732597695175.jpg", "_id": 413180157, "_uuid": "0d4c9e98-3623-457c-8165-d0b16c691577", "_submission_time": "2024-11-26T14:24:53", "_status": "submitted_via_web", "_submitted_by": "lijamagar", "__version__": "vtKh2Uf6azKxxB8Qy8d8tb", "_index": 41 } }
         ]
     },
     {
@@ -374,7 +406,7 @@ const geoData = [
         "type": "FeatureCollection",
         "name": "GPS_SURVEY_GROUP_E",
         "features": [
-            { "type": "Feature", "geometry": { "type": "Point", "coordinates": [83.971879, 28.1921207, 758.0] }, "properties": { "start": "2024-11-25T13:26:35.681+05:45", "end": "2024-11-26T20:48:14.093+05:45", "Form Number": "51", "Healthcare Facility Name": "Chaya Chhetra Healthcare", "Address": "Birauta Chowk", "Contact No.": "061-591880", "Ownership": "Private", "Opening Hour": "07:00:00.000+05:45", "Closing hour": "21:00:00.000+05:45", "Type of Healthcare Facility": "Clinic Pharmacy", "Type of Treatment": "Medicine only Primary Secondary", "Emergency Services": "Yes", "Wheelchair availability": "No", "No. of Beds": "6", "No. of Staff": "10", "Staff Education": "B.pharma and CMA, Radiography", "Full Capacity (approx)": "10", "Daily average traffic": "100", "Photo": "1732520962006.jpg", "Photo_URL": "https://kc.kobotoolbox.org/media/original?media_file=lijamagar%2Fattachments%2F7dca5c2315044268a0872a600b5dd82d%2Fc59b4aed-1483-472d-8b47-43564204bd5b%2F1732520962006.jpg", "_id": 413181029, "_uuid": "73965390-a812-4b07-b809-458f1744a3c6", "_submission_time": "2024-11-26T14:26:40", "_status": "submitted_via_web", "_submitted_by": "lijamagar", "__version__": "vtKh2Uf6azKxxB8Qy8d8tb", "_index": 51 } }
+            { "type": "Feature", "geometry": { "type": "Point", "coordinates": [83.971879, 28.1921207, 758.0] }, "properties": { "start": "2024-11-25T13:26:35.681+05:45", "end": "2024-11-26T20:48:14.093+05:45", "Form Number": "51", "Healthcare Facility Name": "Chaya Chhetra Healthcare", "Address": "Birauta Chowk", "Contact No.": "061-591880", "Ownership": "Private", "Opening Hour": "07:00:00.000+05:45", "Closing hour": "21:00:00.000+05:45", "Type of Healthcare Facility": "Clinic", "Type of Treatment": "Medicine only Primary Secondary", "Emergency Services": "Yes", "Wheelchair availability": "No", "No. of Beds": "6", "No. of Staff": "10", "Staff Education": "B.pharma and CMA, Radiography", "Full Capacity (approx)": "10", "Daily average traffic": "100", "Photo": "1732520962006.jpg", "Photo_URL": "https://kc.kobotoolbox.org/media/original?media_file=lijamagar%2Fattachments%2F7dca5c2315044268a0872a600b5dd82d%2Fc59b4aed-1483-472d-8b47-43564204bd5b%2F1732520962006.jpg", "_id": 413181029, "_uuid": "73965390-a812-4b07-b809-458f1744a3c6", "_submission_time": "2024-11-26T14:26:40", "_status": "submitted_via_web", "_submitted_by": "lijamagar", "__version__": "vtKh2Uf6azKxxB8Qy8d8tb", "_index": 51 } }
         ]
     },
     {
@@ -385,62 +417,84 @@ const geoData = [
         ]
     }
 ];
-// Marker Colors for Facility Types
-const markerColors = {
-    'Hospital': 'red',
-    'Clinic': 'blue',
-    'Pharmacy': 'green'
-};
 
-// Adding Markers to Map
-let geojsonLayer = L.geoJSON(geoData, {
+// --- Add Markers to Map ---
+L.geoJSON(geoData, {
     pointToLayer: function (feature, latlng) {
-        const facilityType = feature.properties["Type of Healthcare Facility"];
-        const treatmentType = feature.properties["Type of Treatment"];
+        const type = feature.properties["Type of Healthcare Facility"];
+        const icon = facilityIcons[type] || facilityIcons.Clinic;
 
-        return L.circleMarker(latlng, {
-            radius: 8,
-            color: markerColors[facilityType] || 'gray',  // Default to gray if not defined
-            fillColor: markerColors[treatmentType.split(' ')[0]] || 'gray', // Primary, Secondary, Tertiary (only taking the first treatment)
-            fillOpacity: 0.8
-        });
+        const marker = L.marker(latlng, { icon: icon });
+
+        // Add to appropriate layer
+        if (type === 'Hospital') {
+            facilityLayers.hospital.addLayer(marker);
+        } else if (type === 'Clinic') {
+            facilityLayers.clinic.addLayer(marker);
+        } else if (type === 'Pharmacy') {
+            facilityLayers.pharmacy.addLayer(marker);
+        }
+
+        return marker;
     },
-  // Modify the onEachFeature function to display text and image in two columns
-onEachFeature: function (feature, layer) {
-    const props = feature.properties;
-    
-    // Popup HTML structure
-    const popupContent = `
-        <div style="display: flex; align-items: center;">
-            <!-- Left side for Text Information -->
-            <div style="flex: 1; padding-right: 10px;">
-                <b>${props["Healthcare Facility Name"]}</b><br>
-                <b>Address:</b> ${props.Address}<br>
-                <b>Contact No.:</b> ${props["Contact No."]}<br>
-                <b>Facility Type:</b> ${props["Type of Healthcare Facility"]}<br>
-                <b>Treatment Type:</b> ${props["Type of Treatment"]}<br>
-                <b>Emergency Services:</b> ${props["Emergency Services"]}<br>
-                <b>Wheelchair Availability:</b> ${props["Wheelchair availability"]}<br>
-                <b>No. of Beds:</b> ${props["No. of Beds"]}<br>
-                <b>No. of Staff:</b> ${props["No. of Staff"]}<br>
-                <b>Staff Education:</b> ${props["Staff Education"]}
+    onEachFeature: function (feature, layer) {
+        const props = feature.properties;
+
+        const popupContent = `
+            <div style="display: flex; align-items: center;">
+                <div style="flex: 1; padding-right: 10px;">
+                    <b>${props["Healthcare Facility Name"]}</b><br>
+                    <b>Address:</b> ${props.Address}<br>
+                    <b>Contact No.:</b> ${props["Contact No."]}<br>
+                    <b>Facility Type:</b> ${props["Type of Healthcare Facility"]}<br>
+                    <b>Treatment Type:</b> ${props["Type of Treatment"]}<br>
+                    <b>Emergency Services:</b> ${props["Emergency Services"]}<br>
+                    <b>Wheelchair Availability:</b> ${props["Wheelchair availability"]}<br>
+                    <b>No. of Beds:</b> ${props["No. of Beds"]}<br>
+                    <b>No. of Staff:</b> ${props["No. of Staff"]}<br>
+                    <b>Staff Education:</b> ${props["Staff Education"]}
+                </div>
+                <div style="flex-shrink: 0; width: 120px;">
+                    <img src="Image/${props.Photo}" alt="Facility Image" style="width: 100%; border-radius: 5px;">
+                </div>
             </div>
-            
-            <!-- Right side for Image -->
-            <div style="flex-shrink: 0; width: 120px; height: auto;">
-                <img src="Image/${props.Photo}" alt="Facility Image" style="width: 100%; height: auto; border-radius: 5px;">
-            </div>
-        </div>
-    `;
-    
-    // Bind the popup to the layer
-    layer.bindPopup(popupContent);
-}
-    
-}).addTo(map);
-// Search input event listener
-document.getElementById('search-input').addEventListener('input', function(e) {
-    const query = e.target.value;
-    searchFeature(query);  // Call the search function with the current input value
+        `;
+        layer.bindPopup(popupContent);
+    }
 });
-        
+
+// --- Button Events ---
+document.getElementById('hospital-btn').addEventListener('click', () => {
+    toggleLayer('hospital');
+    setActiveButton('hospital');
+});
+document.getElementById('clinic-btn').addEventListener('click', () => {
+    toggleLayer('clinic');
+    setActiveButton('clinic');
+});
+document.getElementById('pharmacy-btn').addEventListener('click', () => {
+    toggleLayer('pharmacy');
+    setActiveButton('pharmacy');
+});
+
+// --- Layer Toggle Function ---
+function toggleLayer(type) {
+    Object.keys(facilityLayers).forEach(layerType => {
+        if (layerType !== type && map.hasLayer(facilityLayers[layerType])) {
+            map.removeLayer(facilityLayers[layerType]);
+        }
+    });
+
+    const layer = facilityLayers[type];
+    if (!map.hasLayer(layer)) {
+        map.addLayer(layer);
+    }
+}
+
+// --- Active Button UI Feedback ---
+function setActiveButton(type) {
+    document.querySelectorAll('#map-controls button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById(`${type}-btn`).classList.add('active');
+}
